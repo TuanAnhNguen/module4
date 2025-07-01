@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List Blogs</title>
+</head>
+<body>
+<div>
+    <h2>Blogs List</h2>
+    <a th:href="@{/blogs/create}">Write a new blog</a>
+    <form action="/blogs" method="get">
+        <div>
+            <input name="searchName" type="text" placeholder="Search by title or author" th:value="${searchName}">
+        </div>
+        <div>
+            <button type="submit">Search</button>
+        </div>
+    </form>
+
+    <div th:if="${blogs.isEmpty()}">
+        <div>
+            No blog found. Start by creating your first post!
+        </div>
+    </div>
+
+    <div th:if="${!blogs.isEmpty()}">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Excerpt</th>
+                <th scope="col">Author</th>
+                <th scope="col">Crated</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="blog, status : ${blogs}">
+                <td th:text="${status.count}">1</td>
+                <td th:text="${blog.title}">Title</td>
+                <td th:text="${blog.getExcerpt()}">Excerpt</td>
+                <td th:text="${blog.author}">Author</td>
+                <td th:text="${#temporals.format(blog.createdDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td>
+                    <a th:href="@{/blogs/view/__${blog.id}__}">View</a>
+                    <a th:href="@{/blogs/edit/__${blog.id}__}">Edit</a>
+
+                    <button type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal"
+                            th:data-blog-id="${blog.id}"
+                            th:data-blog-title="${blog.title}">Delete</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
